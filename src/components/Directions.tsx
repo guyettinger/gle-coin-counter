@@ -11,7 +11,6 @@ const DirectionsContainer = styled.div`
 
 const DirectionsText = styled.div`
   text-align: center;
-  margin: 1rem 0;
   width: 80%;
 
   @media screen and (max-width: 768px) {
@@ -22,13 +21,13 @@ const DirectionsText = styled.div`
 const DirectionsHeader1 = styled.h1`
   font-size: 2.2rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 `
 
 const DirectionsParagraph = styled.p`
   font-size: 1.2rem;
   font-weight: 400;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 `
 
 export const Directions = () => {

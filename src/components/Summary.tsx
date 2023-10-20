@@ -36,8 +36,6 @@ export interface SummaryProps {
 }
 
 export const Summary = ({detections}: SummaryProps) => {
-    console.log('detections', detections)
-
     let pennies = 0;
     let nickels = 0;
     let dimes = 0;

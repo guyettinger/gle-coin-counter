@@ -1,17 +1,25 @@
 import { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import styled from "styled-components";
+import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
 import { startInfer } from "@/service/roboflowService";
 import Summary from "@/components/Summary";
 
-const RoboflowContainer = styled.div`display: flex;
+const RoboflowContainer = styled.div`
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 2rem 0;
 `
 
 const RoboflowContent = styled.div`
+  position: relative;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #1D1E20;
+`
+
+const RoboflowVideoContent = styled.div`
   position: relative;
 `
 
@@ -35,11 +43,7 @@ const Roboflow = (props: RoboflowProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [detections, setDetections] = useState<any>(null)
 
-    useEffect(() => {
-        startInfer(detect)
-    }, []);
-
-    const detect = async (model: any) => {
+    const detect = async (model: RoboflowModel) => {
 
         const webcam = webcamRef?.current
         if (!webcam) return
@@ -58,11 +62,12 @@ const Roboflow = (props: RoboflowProps) => {
         video.width = videoWidth
         video.height = videoHeight
 
-        // adust the canvas size to match the video
+        // adjust the canvas size to match the video
         adjustCanvas(videoWidth, videoHeight)
 
         //  get detections
         const detections = await model.detect(video)
+        console.log('roboflow detected', detections)
         setDetections(detections)
 
         const canvasContext = canvas.getContext("2d")
@@ -86,7 +91,7 @@ const Roboflow = (props: RoboflowProps) => {
         canvasContext.scale(window.devicePixelRatio, window.devicePixelRatio)
     }
 
-    const drawBoxes = (detections: any, canvasContext: CanvasRenderingContext2D) => {
+    const drawBoxes = (detections: RoboflowObjectDetection[], canvasContext: CanvasRenderingContext2D) => {
         const canvas = canvasRef?.current
         if (!canvas) return
 
@@ -160,10 +165,14 @@ const Roboflow = (props: RoboflowProps) => {
         })
     }
 
+    useEffect(() => {
+        startInfer(detect)
+    }, []);
+
     return (
-        <>
-            <RoboflowContainer>
-                <RoboflowContent>
+        <RoboflowContainer>
+            <RoboflowContent>
+                <RoboflowVideoContent>
                     <RoboflowWebcam
                         ref={webcamRef}
                         muted={true}
@@ -171,11 +180,10 @@ const Roboflow = (props: RoboflowProps) => {
                     <RoboflowCanvas
                         ref={canvasRef}
                     />
-                </RoboflowContent>
-            </RoboflowContainer>
-            {!!detections && <Summary detections={detections}/>}
-        </>
-
+                </RoboflowVideoContent>
+                {!!detections && <Summary detections={detections}/>}
+            </RoboflowContent>
+        </RoboflowContainer>
     );
 };
 

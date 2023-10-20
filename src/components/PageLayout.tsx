@@ -1,9 +1,9 @@
 'use client'
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { ReactNode } from "react";
 import styled from "styled-components";
 import AppStyleProvider from "@/styles/AppStyleProvider";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const PageBody = styled.body`
   display: flex;
