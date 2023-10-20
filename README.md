@@ -1,4 +1,6 @@
 # gle-coin-counter
-Coin counting using machine learning
+Coin counting using machine learning.
 
-![Alt text](public/screenshot.png?raw=true "Title")
+[Demo](https://guyettinger.github.io/gle-coin-counter/)
+
+![Screenshot](public/screenshot.png?raw=true "Screenshot")
