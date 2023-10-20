@@ -46,7 +46,7 @@ const Roboflow = (props: RoboflowProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [detections, setDetections] = useState<any>(null)
     const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
-    let videoInputCount = 1;
+    const [videoInputCount, setVideoInputCount] = useState(1)
     let videoConstraints: MediaTrackConstraints = {facingMode: facingMode}
 
     const detect = async (model: RoboflowModel) => {
@@ -68,12 +68,13 @@ const Roboflow = (props: RoboflowProps) => {
         video.width = videoWidth
         video.height = videoHeight
 
+        // video devices
         let devices = await navigator.mediaDevices.enumerateDevices()
         console.log("devices", devices)
         let videoDevices = devices.filter((device)=>{
             return device.kind === "videoinput"
         })
-        videoInputCount = videoDevices.length;
+        setVideoInputCount(videoDevices.length);
 
         // adjust the canvas size to match the video
         adjustCanvas(videoWidth, videoHeight)
