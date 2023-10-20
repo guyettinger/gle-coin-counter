@@ -1,9 +1,12 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import Webcam from "react-webcam";
 import styled from "styled-components";
 import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
 import { startInfer } from "@/service/roboflowService";
 import Summary from "@/components/Summary";
+
+const FACING_MODE_USER = "user";
+const FACING_MODE_ENVIRONMENT = "environment";
 
 const RoboflowContainer = styled.div`
   display: flex;
@@ -42,6 +45,9 @@ const Roboflow = (props: RoboflowProps) => {
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [detections, setDetections] = useState<any>(null)
+    const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
+    let videoInputCount = 1;
+    let videoConstraints: MediaTrackConstraints = {facingMode: facingMode}
 
     const detect = async (model: RoboflowModel) => {
 
@@ -61,6 +67,13 @@ const Roboflow = (props: RoboflowProps) => {
 
         video.width = videoWidth
         video.height = videoHeight
+
+        let devices = await navigator.mediaDevices.enumerateDevices()
+        console.log("devices", devices)
+        let videoDevices = devices.filter((device)=>{
+            return device.kind === "videoinput"
+        })
+        videoInputCount = videoDevices.length;
 
         // adjust the canvas size to match the video
         adjustCanvas(videoWidth, videoHeight)
@@ -165,6 +178,15 @@ const Roboflow = (props: RoboflowProps) => {
         })
     }
 
+
+    const handleClick = useCallback(() => {
+        setFacingMode((prevState) =>
+            prevState === FACING_MODE_USER
+                ? FACING_MODE_ENVIRONMENT
+                : FACING_MODE_USER
+        );
+    }, [])
+
     useEffect(() => {
         startInfer(detect)
     }, []);
@@ -172,10 +194,12 @@ const Roboflow = (props: RoboflowProps) => {
     return (
         <RoboflowContainer>
             <RoboflowContent>
+                {videoInputCount > 1 && <button onClick={handleClick}>Switch camera</button>}
                 <RoboflowVideoContent>
                     <RoboflowWebcam
                         ref={webcamRef}
                         muted={true}
+                        videoConstraints={videoConstraints}
                     />
                     <RoboflowCanvas
                         ref={canvasRef}
