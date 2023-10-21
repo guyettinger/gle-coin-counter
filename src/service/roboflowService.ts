@@ -40,7 +40,7 @@ export const startInference = (detectCallback: (model: RoboflowModel) => void) =
                 if (inferRunning && roboflowModel) {
                     detectCallback(roboflowModel);
                 }
-            }, 100);
+            }, 10);
         })
 }
 
