@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { asyncSetInterval } from "@/service/asyncService";
 import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
 import { startInference } from "@/service/roboflowService";
-import { FACING_MODE_ENVIRONMENT, VideoInputMode } from "@/types/mediaDevice.types";
+import { VideoInputMode } from "@/types/mediaDevice.types";
 import { getVideoInputModes } from "@/service/mediaDeviceService";
 import Summary from "@/components/Summary";
 
@@ -55,7 +55,6 @@ const Roboflow = (props: RoboflowProps) => {
     // video constraints based on current video input mode
     let videoConstraints: MediaTrackConstraints = {}
     if (videoInputMode) {
-        videoConstraints.deviceId = videoInputMode.deviceId
         videoConstraints.facingMode = videoInputMode.facingMode
     }
 
@@ -81,15 +80,8 @@ const Roboflow = (props: RoboflowProps) => {
             const allVideoInputModes = await getVideoInputModes()
             if (!allVideoInputModes.length) return
 
-            // default to video input mode that faces the environment
-            let defaultVideoInputMode = allVideoInputModes.find((videoInputMode) => {
-                return videoInputMode.facingMode === FACING_MODE_ENVIRONMENT
-            })
-
             // default to first video input mode
-            if (!defaultVideoInputMode) {
-                defaultVideoInputMode = allVideoInputModes[0]
-            }
+            const defaultVideoInputMode = allVideoInputModes[0]
 
             // set all video input modes
             console.log("video input modes", allVideoInputModes)
