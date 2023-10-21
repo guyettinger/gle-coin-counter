@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import styled from "styled-components";
 import { asyncSetInterval } from "@/service/asyncService";
@@ -54,7 +54,9 @@ const Roboflow = (props: RoboflowProps) => {
 
     // video constraints based on current video input mode
     let videoConstraints: MediaTrackConstraints = {
-        facingMode: FACING_MODE_USER
+        facingMode: FACING_MODE_USER,
+        width: 320,
+        height: 240
     }
 
     if (videoInputMode) {
@@ -89,17 +91,16 @@ const Roboflow = (props: RoboflowProps) => {
 
                 // get all video input devices
                 const allVideoInputModes = await getVideoInputModes()
-                if (!allVideoInputModes.length) return
 
                 // default to first video input mode
                 const defaultVideoInputMode = allVideoInputModes[0]
 
                 // set all video input modes
-                console.log("video input modes", allVideoInputModes)
+                console.log("initializing video input modes", allVideoInputModes)
                 setVideoInputModes(allVideoInputModes)
 
                 // set the default video input mode
-                console.log("default video input mode", defaultVideoInputMode)
+                console.log("initializing default video input mode", defaultVideoInputMode)
                 setVideoInputMode(defaultVideoInputMode)
 
                 // set video input modes initialized
@@ -110,7 +111,7 @@ const Roboflow = (props: RoboflowProps) => {
             // done initializing
             clearInterval(initializeInterval)
 
-        }, 10);
+        }, 100);
     }
 
     const detect = async (model: RoboflowModel) => {
