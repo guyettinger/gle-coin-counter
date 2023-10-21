@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Webcam from "react-webcam";
 import styled from "styled-components";
+import { asyncSetInterval } from "@/service/asyncService";
 import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
 import { startInference } from "@/service/roboflowService";
 import { FACING_MODE_ENVIRONMENT, VideoInputMode } from "@/types/mediaDevice.types";
@@ -44,7 +45,7 @@ const Roboflow = (props: RoboflowProps) => {
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [objectDetections, setObjectDetections] = useState<RoboflowObjectDetection[]>([])
-    const [videoInputModesInitialized, setVideoInputModesInitialized] = useState<boolean>(false)
+    const [initialized, setInitialized] = useState<boolean>(false)
     const [videoInputModes, setVideoInputModes] = useState<VideoInputMode[]>([])
     const [videoInputMode, setVideoInputMode] = useState<VideoInputMode | null>(null)
 
@@ -56,6 +57,55 @@ const Roboflow = (props: RoboflowProps) => {
     if (videoInputMode) {
         videoConstraints.deviceId = videoInputMode.deviceId
         videoConstraints.facingMode = videoInputMode.facingMode
+    }
+
+    const initialize = () => {
+
+        let initializeInterval = asyncSetInterval(async () => {
+            const webcam = webcamRef?.current
+            if (!webcam) return
+
+            const video = webcam?.video
+            if (!video) return
+
+            const canvas = canvasRef?.current
+            if (!canvas) return
+
+            // check data is available
+            if (video.readyState !== 4) return
+
+            // return if already initialized
+            if (initialized) return
+
+            // get all video input devices
+            const allVideoInputModes = await getVideoInputModes()
+            if (!allVideoInputModes.length) return
+
+            // default to video input mode that faces the environment
+            let defaultVideoInputMode = allVideoInputModes.find((videoInputMode) => {
+                return videoInputMode.facingMode === FACING_MODE_ENVIRONMENT
+            })
+
+            // default to first video input mode
+            if (!defaultVideoInputMode) {
+                defaultVideoInputMode = allVideoInputModes[0]
+            }
+
+            // set all video input modes
+            console.log("video input modes", allVideoInputModes)
+            setVideoInputModes(allVideoInputModes)
+
+            // set the default video input mode
+            console.log("default video input mode", defaultVideoInputMode)
+            setVideoInputMode(defaultVideoInputMode)
+
+            // set video input modes initialized
+            setInitialized(true)
+
+            // done initializing
+            clearInterval(initializeInterval)
+
+        }, 10);
     }
 
     const detect = async (model: RoboflowModel) => {
@@ -71,6 +121,7 @@ const Roboflow = (props: RoboflowProps) => {
 
         // check data is available
         if (video.readyState !== 4) return
+
         const videoWidth = video.videoWidth
         const videoHeight = video.videoHeight
 
@@ -198,41 +249,14 @@ const Roboflow = (props: RoboflowProps) => {
     }, [])
 
     useEffect(() => {
-
-        // if video input modes aren't initialized
-        if (!videoInputModesInitialized) {
-
-            // get all video input devices
-            getVideoInputModes().then((allVideoInputModes) => {
-                if (!allVideoInputModes.length) return
-
-                // default to video input mode that faces the environment
-                let defaultVideoInputMode = allVideoInputModes.find((videoInputMode) => {
-                    return videoInputMode.facingMode === FACING_MODE_ENVIRONMENT
-                })
-
-                // default to first video input mode
-                if (!defaultVideoInputMode) {
-                    defaultVideoInputMode = allVideoInputModes[0]
-                }
-
-                // set all video input modes
-                console.log("video input modes", allVideoInputModes)
-                setVideoInputModes(allVideoInputModes)
-
-                // set the default video input mode
-                console.log("default video input mode", defaultVideoInputMode)
-                setVideoInputMode(defaultVideoInputMode)
-
-                // set video input modes initialized
-                setVideoInputModesInitialized(true)
-            })
+        if (!initialized) {
+            // initialize
+            initialize()
         } else {
             // start inference
             startInference(detect)
         }
-
-    }, [videoInputModesInitialized]);
+    }, [initialized])
 
     return (
         <RoboflowContainer>

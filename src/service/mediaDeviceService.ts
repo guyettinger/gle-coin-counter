@@ -1,4 +1,9 @@
-import { FACING_MODE_USER, VIDEO_INPUT, VideoInput, VideoInputMode } from "@/types/mediaDevice.types";
+import {
+    FACING_MODE_USER,
+    VIDEO_INPUT,
+    VideoInput,
+    VideoInputMode
+} from "@/types/mediaDevice.types";
 
 export const getVideoInputs = async (): Promise<VideoInput[]> => {
     // get all video input devices
@@ -25,16 +30,16 @@ export const getVideoInputs = async (): Promise<VideoInput[]> => {
 }
 
 export const getVideoInputModes = async () => {
-    const videoInputModes:VideoInputMode[] = []
+    const videoInputModes: VideoInputMode[] = []
     const videoInputs = await getVideoInputs()
 
-    videoInputs.forEach((videoInput:VideoInput) => {
+    videoInputs.forEach((videoInput: VideoInput) => {
         // if there are facing modes
         const facingModes = videoInput.mediaTrackCapabilities.facingMode
-        if(facingModes && facingModes.length){
+        if (facingModes && facingModes.length) {
             // add each facing mode separately
-            facingModes.forEach((facingMode)=>{
-                const videoInputMode:VideoInputMode = {
+            facingModes.forEach((facingMode) => {
+                const videoInputMode: VideoInputMode = {
                     deviceId: videoInput.inputDeviceInfo.deviceId,
                     facingMode: facingMode,
                     label: videoInput.inputDeviceInfo.label
@@ -43,7 +48,7 @@ export const getVideoInputModes = async () => {
             })
         } else {
             // add default mode
-            const videoInputMode:VideoInputMode = {
+            const videoInputMode: VideoInputMode = {
                 deviceId: videoInput.inputDeviceInfo.deviceId,
                 facingMode: FACING_MODE_USER,
                 label: videoInput.inputDeviceInfo.label
