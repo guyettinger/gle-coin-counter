@@ -16,7 +16,7 @@ export const getRoboflowInstance = ():RoboflowClient => {
     return roboflowClient;
 }
 
-export const startInfer = (detectCallback: (model: RoboflowModel) => void) => {
+export const startInference = (detectCallback: (model: RoboflowModel) => void) => {
     inferRunning = true;
     const roboflow = getRoboflowInstance();
     roboflow
@@ -42,7 +42,7 @@ export const startInfer = (detectCallback: (model: RoboflowModel) => void) => {
         })
 }
 
-export const stopInfer = () => {
+export const stopInference = () => {
     inferRunning = false
     if (roboflowModel) {
         roboflowModel.teardown()

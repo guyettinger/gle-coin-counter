@@ -2,11 +2,10 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import Webcam from "react-webcam";
 import styled from "styled-components";
 import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
-import { startInfer } from "@/service/roboflowService";
+import { startInference } from "@/service/roboflowService";
+import { FACING_MODE_ENVIRONMENT, VideoInputMode } from "@/types/mediaDevice.types";
+import { getVideoInputModes } from "@/service/mediaDeviceService";
 import Summary from "@/components/Summary";
-
-const FACING_MODE_USER = "user";
-const FACING_MODE_ENVIRONMENT = "environment";
 
 const RoboflowContainer = styled.div`
   display: flex;
@@ -44,10 +43,20 @@ interface RoboflowProps {
 const Roboflow = (props: RoboflowProps) => {
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
-    const [detections, setDetections] = useState<any>(null)
-    const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
-    const [videoInputCount, setVideoInputCount] = useState(1)
-    let videoConstraints: MediaTrackConstraints = {facingMode: facingMode}
+    const [objectDetections, setObjectDetections] = useState<RoboflowObjectDetection[]>([])
+    const [videoInputModesInitialized, setVideoInputModesInitialized] = useState<boolean>(false)
+    const [videoInputModes, setVideoInputModes] = useState<VideoInputMode[]>([])
+    const [videoInputMode, setVideoInputMode] = useState<VideoInputMode | null>(null)
+
+    // count of available video input modes
+    let videoInputModeCount = videoInputModes.length
+
+    // video constraints based on current video input mode
+    let videoConstraints: MediaTrackConstraints = {}
+    if (videoInputMode) {
+        videoConstraints.deviceId = videoInputMode.deviceId
+        videoConstraints.facingMode = videoInputMode.facingMode
+    }
 
     const detect = async (model: RoboflowModel) => {
 
@@ -68,21 +77,13 @@ const Roboflow = (props: RoboflowProps) => {
         video.width = videoWidth
         video.height = videoHeight
 
-        // video devices
-        let devices = await navigator.mediaDevices.enumerateDevices()
-        console.log("devices", devices)
-        let videoDevices = devices.filter((device)=>{
-            return device.kind === "videoinput"
-        })
-        setVideoInputCount(videoDevices.length);
-
         // adjust the canvas size to match the video
         adjustCanvas(videoWidth, videoHeight)
 
         //  get detections
         const detections = await model.detect(video)
         console.log('roboflow detected', detections)
-        setDetections(detections)
+        setObjectDetections(detections)
 
         const canvasContext = canvas.getContext("2d")
         if (!canvasContext) return
@@ -179,23 +180,64 @@ const Roboflow = (props: RoboflowProps) => {
         })
     }
 
+    const toggleVideoMode = () => {
+        if (!videoInputModes) return
+        if (!videoInputMode) return
+        const videoInputModeIndex = videoInputModes.indexOf(videoInputMode)
+        let nextVideoInputModeIndex = videoInputModeIndex + 1
+        if (nextVideoInputModeIndex >= videoInputModes.length) {
+            nextVideoInputModeIndex = 0
+        }
+        const nextVideoInputMode = videoInputModes.at(nextVideoInputModeIndex)
+        if (!nextVideoInputMode) return;
+        setVideoInputMode(nextVideoInputMode)
+    }
 
     const handleClick = useCallback(() => {
-        setFacingMode((prevState) =>
-            prevState === FACING_MODE_USER
-                ? FACING_MODE_ENVIRONMENT
-                : FACING_MODE_USER
-        );
+        toggleVideoMode()
     }, [])
 
     useEffect(() => {
-        startInfer(detect)
-    }, []);
+
+        // if video input modes aren't initialized
+        if (!videoInputModesInitialized) {
+
+            // get all video input devices
+            getVideoInputModes().then((allVideoInputModes) => {
+                if (!allVideoInputModes.length) return
+
+                // set all video input modes
+                console.log("video input modes", allVideoInputModes)
+                setVideoInputModes(allVideoInputModes)
+
+                // default to video input mode that faces the environment
+                let defaultVideoInputMode = allVideoInputModes.find((videoInputMode) => {
+                    return videoInputMode.facingMode === FACING_MODE_ENVIRONMENT
+                })
+
+                // default to first video input mode
+                if (!defaultVideoInputMode) {
+                    defaultVideoInputMode = allVideoInputModes[0]
+                }
+
+                // set the default video input mode
+                console.log("default video input mode", defaultVideoInputMode)
+                setVideoInputMode(defaultVideoInputMode)
+
+                // video input modes initialized
+                setVideoInputModesInitialized(true)
+            })
+        } else {
+            // start inference
+            startInference(detect)
+        }
+
+    }, [videoInputModesInitialized]);
 
     return (
         <RoboflowContainer>
             <RoboflowContent>
-                {videoInputCount > 1 && <button onClick={handleClick}>Switch camera</button>}
+                {videoInputModeCount > 1 && <button onClick={handleClick}>Switch camera</button>}
                 <RoboflowVideoContent>
                     <RoboflowWebcam
                         ref={webcamRef}
@@ -206,7 +248,7 @@ const Roboflow = (props: RoboflowProps) => {
                         ref={canvasRef}
                     />
                 </RoboflowVideoContent>
-                {!!detections && <Summary detections={detections}/>}
+                {!!objectDetections && <Summary detections={objectDetections}/>}
             </RoboflowContent>
         </RoboflowContainer>
     );
