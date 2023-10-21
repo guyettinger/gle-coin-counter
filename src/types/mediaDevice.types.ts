@@ -11,4 +11,7 @@ export interface VideoInputMode {
     deviceId: string
     label: string
     facingMode: string
+    aspectRatio?: DoubleRange
+    width?: ULongRange
+    height?: ULongRange
 }

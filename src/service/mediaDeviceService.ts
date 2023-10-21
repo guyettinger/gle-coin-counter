@@ -26,6 +26,8 @@ export const getVideoInputs = async (): Promise<VideoInput[]> => {
         }
         videoInputs.push(videoInput)
     })
+
+    console.log('video inputs', videoInputs)
     return videoInputs
 }
 
@@ -34,15 +36,22 @@ export const getVideoInputModes = async () => {
     const videoInputs = await getVideoInputs()
 
     videoInputs.forEach((videoInput: VideoInput) => {
+        const inputDeviceInfo= videoInput.inputDeviceInfo
+        const mediaTrackCapabilities= videoInput.mediaTrackCapabilities
+
         // if there are facing modes
-        const facingModes = videoInput.mediaTrackCapabilities.facingMode
+        const facingModes = mediaTrackCapabilities.facingMode
         if (facingModes && facingModes.length) {
             // add each facing mode separately
             facingModes.forEach((facingMode) => {
                 const videoInputMode: VideoInputMode = {
-                    deviceId: videoInput.inputDeviceInfo.deviceId,
+                    deviceId: inputDeviceInfo.deviceId,
                     facingMode: facingMode,
-                    label: videoInput.inputDeviceInfo.label
+                    label: inputDeviceInfo.label,
+                    aspectRatio: mediaTrackCapabilities.aspectRatio,
+                    width: mediaTrackCapabilities.width,
+                    height: mediaTrackCapabilities.height
+
                 }
                 videoInputModes.push(videoInputMode)
             })
@@ -51,7 +60,10 @@ export const getVideoInputModes = async () => {
             const videoInputMode: VideoInputMode = {
                 deviceId: videoInput.inputDeviceInfo.deviceId,
                 facingMode: FACING_MODE_USER,
-                label: videoInput.inputDeviceInfo.label
+                label: videoInput.inputDeviceInfo.label,
+                aspectRatio: mediaTrackCapabilities.aspectRatio,
+                width: mediaTrackCapabilities.width,
+                height: mediaTrackCapabilities.height
             }
             videoInputModes.push(videoInputMode)
         }

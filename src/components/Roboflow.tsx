@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
+import { useMediaQuery } from "styled-breakpoints/use-media-query";
 import { asyncSetInterval } from "@/service/asyncService";
 import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
 import { startInference } from "@/service/roboflowService";
@@ -13,6 +14,7 @@ const RoboflowContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin: 1rem 0;
 `
 
 const RoboflowContent = styled.div`
@@ -20,6 +22,10 @@ const RoboflowContent = styled.div`
   padding: 1rem;
   margin-bottom: 1rem;
   background-color: #1D1E20;
+`
+
+const RoboflowToolbar = styled.div`
+  margin-bottom: 10px;
 `
 
 const RoboflowVideoContent = styled.div`
@@ -38,6 +44,23 @@ const RoboflowCanvas = styled.canvas`
   left: 0;
 `
 
+const RoboflowButton = styled.button`
+  border: 0;
+  line-height: 1;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 3px;
+  display: inline-block;
+  padding: 5px 20px 5px;
+  float: right;
+`
+
+const RoboflowLabel = styled.span`
+  font-size: 12px;
+  line-height: 1;
+`
+
 interface RoboflowProps {
 }
 
@@ -49,20 +72,44 @@ const Roboflow = (props: RoboflowProps) => {
     const [videoInputModes, setVideoInputModes] = useState<VideoInputMode[]>([])
     const [videoInputMode, setVideoInputMode] = useState<VideoInputMode | null>(null)
 
-    // count of available video input modes
-    let videoInputModeCount = videoInputModes.length
+    // determine screen size
+    const theme = useTheme()
+    const isXs = useMediaQuery(theme.breakpoints.only("xs"))
+    const isSm = useMediaQuery(theme.breakpoints.only("sm"))
+    const isMd = useMediaQuery(theme.breakpoints.only("md"))
+    const isLg = useMediaQuery(theme.breakpoints.only("lg"))
+    const isXl = useMediaQuery(theme.breakpoints.only("xl"))
+    const isXxl = useMediaQuery(theme.breakpoints.only("xxl"))
+
+    // determine optimal video constraints dimensions
+    let constraintWidth = 640
+    let constraintHeight = 480
+
+    if (isXs || isSm) {
+        constraintWidth = 512
+        constraintHeight = 288
+    } else if (isMd || isLg) {
+        constraintWidth = 768
+        constraintWidth = 432
+    } else if(isXl || isXxl){
+        constraintWidth = 1024
+        constraintWidth = 576
+    }
 
     // video constraints based on current video input mode
     let videoConstraints: MediaTrackConstraints = {
         facingMode: FACING_MODE_USER,
-        width: 320,
-        height: 240
+        width: constraintWidth,
+        height: constraintHeight
     }
 
     if (videoInputMode) {
         videoConstraints.deviceId = videoInputMode.deviceId
         videoConstraints.facingMode = videoInputMode.facingMode
     }
+
+    // count of available video input modes
+    let videoInputModeCount = videoInputModes.length
 
     const initializeVideo = () => {
 
@@ -267,8 +314,10 @@ const Roboflow = (props: RoboflowProps) => {
     return (
         <RoboflowContainer>
             <RoboflowContent>
-                {videoInputModeCount > 1 && <button onClick={handleSwitchVideoModeClick}>Switch camera</button>}
-                {videoInputMode && <span>{videoInputMode.label}</span>}
+                <RoboflowToolbar>
+                    {videoInputMode && <RoboflowLabel>{videoInputMode.label}</RoboflowLabel>}
+                    {videoInputModeCount > 1 && <RoboflowButton onClick={handleSwitchVideoModeClick}>Switch camera</RoboflowButton>}
+                </RoboflowToolbar>
                 <RoboflowVideoContent>
                     <RoboflowWebcam
                         ref={webcamRef}

@@ -1,12 +1,12 @@
 "use client"
 import styled from "styled-components";
+import { RoboflowObjectDetection } from "@/types/roboflow.types";
 
 const SummaryContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 2rem 0;
 `
 
 const SummaryText = styled.div`
@@ -20,19 +20,19 @@ const SummaryText = styled.div`
 `
 
 const SummaryHeader1 = styled.h1`
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 1rem;
 `
 
 const SummaryParagraph = styled.p`
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 400;
   margin-bottom: 1rem;
 `
 
 export interface SummaryProps {
-    detections: any
+    detections: RoboflowObjectDetection[]
 }
 
 export const Summary = ({detections}: SummaryProps) => {
@@ -43,8 +43,8 @@ export const Summary = ({detections}: SummaryProps) => {
     let total = 0;
 
     if (detections) {
-        detections.forEach((detection: any) => {
-            const detectionClass = detection?.class
+        detections.forEach((detection: RoboflowObjectDetection) => {
+            const detectionClass = detection.class
             if (!detectionClass) return
             switch (detectionClass) {
                 case "Penny":

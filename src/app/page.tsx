@@ -1,7 +1,6 @@
 "use client"
 import styled from "styled-components";
 import Roboflow from "@/components/Roboflow";
-import Directions from "@/components/Directions";
 
 const HomeContainer = styled.div`
   display: flex;
@@ -12,7 +11,6 @@ const HomeContainer = styled.div`
 export default function Home() {
     return (
         <HomeContainer>
-            <Directions/>
             <Roboflow/>
         </HomeContainer>
     )

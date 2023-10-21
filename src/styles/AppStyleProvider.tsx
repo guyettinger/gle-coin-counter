@@ -1,15 +1,16 @@
 'use client';
 
 import { ReactNode } from "react";
-import { ThemeProvider } from 'styled-components';
 import StyledComponentsRegistry from "@/styles/StyledComponentRegistry";
 import GlobalStyles from "@/styles/GlobalStyles";
-import theme from "@/styles/theme";
+import ThemeProvider from "@/theme/ThemeProvider";
+import DarkTheme from "@/theme/DarkTheme";
+
 
 const AppStyleProvider = ({children}: { children: ReactNode }) => {
     return (
         <StyledComponentsRegistry>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={DarkTheme}>
                 <GlobalStyles />
                 {children}
             </ThemeProvider>
