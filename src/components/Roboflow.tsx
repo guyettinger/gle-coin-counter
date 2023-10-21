@@ -206,10 +206,6 @@ const Roboflow = (props: RoboflowProps) => {
             getVideoInputModes().then((allVideoInputModes) => {
                 if (!allVideoInputModes.length) return
 
-                // set all video input modes
-                console.log("video input modes", allVideoInputModes)
-                setVideoInputModes(allVideoInputModes)
-
                 // default to video input mode that faces the environment
                 let defaultVideoInputMode = allVideoInputModes.find((videoInputMode) => {
                     return videoInputMode.facingMode === FACING_MODE_ENVIRONMENT
@@ -220,11 +216,15 @@ const Roboflow = (props: RoboflowProps) => {
                     defaultVideoInputMode = allVideoInputModes[0]
                 }
 
+                // set all video input modes
+                console.log("video input modes", allVideoInputModes)
+                setVideoInputModes(allVideoInputModes)
+
                 // set the default video input mode
                 console.log("default video input mode", defaultVideoInputMode)
                 setVideoInputMode(defaultVideoInputMode)
 
-                // video input modes initialized
+                // set video input modes initialized
                 setVideoInputModesInitialized(true)
             })
         } else {
@@ -250,8 +250,12 @@ const Roboflow = (props: RoboflowProps) => {
                 </RoboflowVideoContent>
                 {!!objectDetections && <Summary detections={objectDetections}/>}
             </RoboflowContent>
+            {videoInputModes.map((videoInputMode) => {
+                return (<span
+                    key={`${videoInputMode.deviceId}-${videoInputMode.facingMode}`}>{videoInputMode.label} {videoInputMode.facingMode}</span>)
+            })}
         </RoboflowContainer>
-    );
-};
+    )
+}
 
 export default Roboflow
