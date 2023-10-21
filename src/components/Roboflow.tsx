@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { asyncSetInterval } from "@/service/asyncService";
 import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
 import { startInference } from "@/service/roboflowService";
-import { VideoInputMode } from "@/types/mediaDevice.types";
+import { FACING_MODE_USER, VideoInputMode } from "@/types/mediaDevice.types";
 import { getVideoInputModes } from "@/service/mediaDeviceService";
 import Summary from "@/components/Summary";
 
@@ -53,12 +53,17 @@ const Roboflow = (props: RoboflowProps) => {
     let videoInputModeCount = videoInputModes.length
 
     // video constraints based on current video input mode
-    let videoConstraints: MediaTrackConstraints = {}
+    let videoConstraints: MediaTrackConstraints = {
+        facingMode: FACING_MODE_USER
+    }
+
     if (videoInputMode) {
         videoConstraints.facingMode = videoInputMode.facingMode
     }
 
     const initialize = () => {
+
+        let initializing = false
 
         let initializeInterval = asyncSetInterval(async () => {
             const webcam = webcamRef?.current
@@ -76,23 +81,28 @@ const Roboflow = (props: RoboflowProps) => {
             // return if already initialized
             if (initialized) return
 
-            // get all video input devices
-            const allVideoInputModes = await getVideoInputModes()
-            if (!allVideoInputModes.length) return
+            // return if initializing
+            if (!initializing) {
+                initializing = true
 
-            // default to first video input mode
-            const defaultVideoInputMode = allVideoInputModes[0]
+                // get all video input devices
+                const allVideoInputModes = await getVideoInputModes()
+                if (!allVideoInputModes.length) return
 
-            // set all video input modes
-            console.log("video input modes", allVideoInputModes)
-            setVideoInputModes(allVideoInputModes)
+                // default to first video input mode
+                const defaultVideoInputMode = allVideoInputModes[0]
 
-            // set the default video input mode
-            console.log("default video input mode", defaultVideoInputMode)
-            setVideoInputMode(defaultVideoInputMode)
+                // set all video input modes
+                console.log("video input modes", allVideoInputModes)
+                setVideoInputModes(allVideoInputModes)
 
-            // set video input modes initialized
-            setInitialized(true)
+                // set the default video input mode
+                console.log("default video input mode", defaultVideoInputMode)
+                setVideoInputMode(defaultVideoInputMode)
+
+                // set video input modes initialized
+                setInitialized(true)
+            }
 
             // done initializing
             clearInterval(initializeInterval)
