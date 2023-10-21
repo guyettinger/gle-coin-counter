@@ -58,6 +58,7 @@ const Roboflow = (props: RoboflowProps) => {
     }
 
     if (videoInputMode) {
+        videoConstraints.deviceId = videoInputMode.deviceId
         videoConstraints.facingMode = videoInputMode.facingMode
     }
 
@@ -264,6 +265,7 @@ const Roboflow = (props: RoboflowProps) => {
         <RoboflowContainer>
             <RoboflowContent>
                 {videoInputModeCount > 1 && <button onClick={handleClick}>Switch camera</button>}
+                {videoInputMode && <span>{videoInputMode.label}</span>}
                 <RoboflowVideoContent>
                     <RoboflowWebcam
                         ref={webcamRef}
@@ -276,10 +278,6 @@ const Roboflow = (props: RoboflowProps) => {
                 </RoboflowVideoContent>
                 {!!objectDetections && <Summary detections={objectDetections}/>}
             </RoboflowContent>
-            {videoInputModes.map((videoInputMode) => {
-                return (<span
-                    key={`${videoInputMode.deviceId}-${videoInputMode.facingMode}`}>{videoInputMode.label} {videoInputMode.facingMode}</span>)
-            })}
         </RoboflowContainer>
     )
 }
