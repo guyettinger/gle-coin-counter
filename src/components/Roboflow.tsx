@@ -45,7 +45,7 @@ const Roboflow = (props: RoboflowProps) => {
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [objectDetections, setObjectDetections] = useState<RoboflowObjectDetection[]>([])
-    const [initialized, setInitialized] = useState<boolean>(false)
+    const [videoInitialized, setVideoInitialized] = useState<boolean>(false)
     const [videoInputModes, setVideoInputModes] = useState<VideoInputMode[]>([])
     const [videoInputMode, setVideoInputMode] = useState<VideoInputMode | null>(null)
 
@@ -62,9 +62,9 @@ const Roboflow = (props: RoboflowProps) => {
         videoConstraints.facingMode = videoInputMode.facingMode
     }
 
-    const initialize = () => {
+    const initializeVideo = () => {
 
-        let initializing = false
+        let initializingVideo = false
 
         let initializeInterval = asyncSetInterval(async () => {
             const webcam = webcamRef?.current
@@ -80,11 +80,12 @@ const Roboflow = (props: RoboflowProps) => {
             if (video.readyState !== 4) return
 
             // return if already initialized
-            if (initialized) return
+            if (videoInitialized) return
 
             // return if initializing
-            if (!initializing) {
-                initializing = true
+            if (!initializingVideo) {
+                console.log("initializing video")
+                initializingVideo = true
 
                 // get all video input devices
                 const allVideoInputModes = await getVideoInputModes()
@@ -102,7 +103,8 @@ const Roboflow = (props: RoboflowProps) => {
                 setVideoInputMode(defaultVideoInputMode)
 
                 // set video input modes initialized
-                setInitialized(true)
+                console.log("initialized video")
+                setVideoInitialized(true)
             }
 
             // done initializing
@@ -247,24 +249,24 @@ const Roboflow = (props: RoboflowProps) => {
         setVideoInputMode(nextVideoInputMode)
     }
 
-    const handleClick = useCallback(() => {
+    const handleSwitchVideoModeClick = () => {
         toggleVideoMode()
-    }, [])
+    }
 
     useEffect(() => {
-        if (!initialized) {
+        if (!videoInitialized) {
             // initialize
-            initialize()
+            initializeVideo()
         } else {
             // start inference
             startInference(detect)
         }
-    }, [initialized])
+    }, [videoInitialized])
 
     return (
         <RoboflowContainer>
             <RoboflowContent>
-                {videoInputModeCount > 1 && <button onClick={handleClick}>Switch camera</button>}
+                {videoInputModeCount > 1 && <button onClick={handleSwitchVideoModeClick}>Switch camera</button>}
                 {videoInputMode && <span>{videoInputMode.label}</span>}
                 <RoboflowVideoContent>
                     <RoboflowWebcam
