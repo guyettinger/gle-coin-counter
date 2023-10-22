@@ -10,7 +10,7 @@ const LightTheme: CoinCounterTheme = {
     },
     name: 'light',
     spacing,
-    typography,
+    typography
 };
 
 export default LightTheme

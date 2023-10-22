@@ -4,7 +4,7 @@ import LightTheme from "./LightTheme";
 
 const DefaultTheme: CoinCounterTheme = {
     ...LightTheme,
-    ...createStyledBreakpointsTheme(),
+    ...createStyledBreakpointsTheme()
 };
 
 export default DefaultTheme

@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import styled, { useTheme } from "styled-components";
 import { useMediaQuery } from "styled-breakpoints/use-media-query";
+import { Button } from "gle-components";
 import { asyncSetInterval } from "@/service/asyncService";
 import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
 import { startInference } from "@/service/roboflowService";
@@ -22,6 +23,7 @@ const RoboflowContent = styled.div`
   padding: 1rem;
   margin-bottom: 1rem;
   background-color: #1D1E20;
+  border-radius: 4px;
 `
 
 const RoboflowToolbar = styled.div`
@@ -44,15 +46,7 @@ const RoboflowCanvas = styled.canvas`
   left: 0;
 `
 
-const RoboflowButton = styled.button`
-  border: 0;
-  line-height: 1;
-  font-size: 12px;
-  cursor: pointer;
-  font-weight: bold;
-  border-radius: 3px;
-  display: inline-block;
-  padding: 5px 20px 5px;
+const RoboflowButton = styled(Button)`
   float: right;
 `
 
@@ -316,7 +310,7 @@ const Roboflow = (props: RoboflowProps) => {
             <RoboflowContent>
                 <RoboflowToolbar>
                     {videoInputMode && <RoboflowLabel>{videoInputMode.label}</RoboflowLabel>}
-                    {videoInputModeCount > 1 && <RoboflowButton onClick={handleSwitchVideoModeClick}>Switch camera</RoboflowButton>}
+                    {videoInputModeCount > 1 && <RoboflowButton variant={"small"} primary={true} onClick={handleSwitchVideoModeClick}>Switch camera</RoboflowButton>}
                 </RoboflowToolbar>
                 <RoboflowVideoContent>
                     <RoboflowWebcam

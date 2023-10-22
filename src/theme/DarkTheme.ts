@@ -24,7 +24,7 @@ const DarkTheme: CoinCounterTheme = {
         screenForeground: baseColors.white,
         screenBackground: baseColors.grey.dark6,
     },
-    name: 'dark',
+    name: 'dark'
 }
 
 export default DarkTheme
