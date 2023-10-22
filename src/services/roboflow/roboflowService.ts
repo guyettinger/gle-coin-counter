@@ -1,5 +1,5 @@
-import { RoboflowClient, RoboflowModel, RoboflowProject } from "@/types/roboflow.types";
-import { asyncSetInterval } from "@/service/asyncService";
+import { RoboflowClient, RoboflowModel, RoboflowProject } from "@/services/roboflow/roboflowService.types";
+import { asyncSetInterval } from "@/services/async/asyncService";
 
 // configuration
 const PUBLISHABLE_ROBOFLOW_API_KEY = "rf_1eRKBW2DCNhgsk4TWynWYt8bzEI3"

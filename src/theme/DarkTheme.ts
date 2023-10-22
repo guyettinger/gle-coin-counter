@@ -1,8 +1,8 @@
 import { CoinCounterTheme } from "./Theme.types";
-import LightTheme from "./LightTheme";
+import { LightTheme } from "./LightTheme";
 import { baseColors, boxShadow } from "./Variables";
 
-const DarkTheme: CoinCounterTheme = {
+export const DarkTheme: CoinCounterTheme = {
     ...LightTheme,
     boxShadow: {
         ...boxShadow,
@@ -26,5 +26,3 @@ const DarkTheme: CoinCounterTheme = {
     },
     name: 'dark'
 }
-
-export default DarkTheme

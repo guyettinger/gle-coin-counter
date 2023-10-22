@@ -1,9 +1,9 @@
 import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
 import { GLEComponentDefaultTheme, GLEComponentThemeProvider } from "gle-components";
 import { CoinCounterThemeProviderProps } from "./Theme.types";
-import DefaultTheme from "./DefaultTheme";
+import { DefaultTheme } from "./DefaultTheme";
 
-const ThemeProvider = ({theme, children}: CoinCounterThemeProviderProps) => {
+export const ThemeProvider = ({theme, children}: CoinCounterThemeProviderProps) => {
     const coinCounterTheme = Object.assign({}, DefaultTheme, theme)
     return (
         <StyledComponentsThemeProvider theme={coinCounterTheme}>
@@ -11,7 +11,5 @@ const ThemeProvider = ({theme, children}: CoinCounterThemeProviderProps) => {
                 {children}
             </GLEComponentThemeProvider>
         </StyledComponentsThemeProvider>
-    );
+    )
 }
-
-export default ThemeProvider

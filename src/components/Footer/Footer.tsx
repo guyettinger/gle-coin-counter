@@ -32,7 +32,7 @@ const FooterLink = styled.a`
   }
 `
 
-const Footer = () => {
+export const Footer = () => {
     return (
         <>
             <FooterContainer>
@@ -61,5 +61,3 @@ const Footer = () => {
         </>
     )
 }
-
-export default Footer;

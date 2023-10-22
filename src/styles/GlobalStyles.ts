@@ -110,10 +110,8 @@ const styles = css`
     }
   }
 
-`;
+`
 
-const GlobalStyles = createGlobalStyle`
+export const GlobalStyles = createGlobalStyle`
   ${styles}
-`;
-
-export default GlobalStyles;
+`

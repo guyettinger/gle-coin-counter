@@ -3,7 +3,7 @@ import {
     VIDEO_INPUT,
     VideoInput,
     VideoInputMode
-} from "@/types/mediaDevice.types";
+} from "@/services/mediaDevice/mediaDeviceService.types";
 
 export const getVideoInputs = async (): Promise<VideoInput[]> => {
     // get all video input devices

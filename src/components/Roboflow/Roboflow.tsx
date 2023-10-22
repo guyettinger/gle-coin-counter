@@ -3,12 +3,13 @@ import Webcam from "react-webcam";
 import styled, { useTheme } from "styled-components";
 import { useMediaQuery } from "styled-breakpoints/use-media-query";
 import { Button } from "gle-components";
-import { asyncSetInterval } from "@/service/asyncService";
-import { RoboflowModel, RoboflowObjectDetection } from "@/types/roboflow.types";
-import { startInference } from "@/service/roboflowService";
-import { FACING_MODE_USER, VideoInputMode } from "@/types/mediaDevice.types";
-import { getVideoInputModes } from "@/service/mediaDeviceService";
-import Summary from "@/components/Summary";
+import { asyncSetInterval } from "@/services/async/asyncService";
+import { RoboflowModel, RoboflowObjectDetection } from "@/services/roboflow/roboflowService.types";
+import { startInference } from "@/services/roboflow/roboflowService";
+import { FACING_MODE_USER, VideoInputMode } from "@/services/mediaDevice/mediaDeviceService.types";
+import { getVideoInputModes } from "@/services/mediaDevice/mediaDeviceService";
+import { Summary } from "@/components/Summary/Summary";
+import { RoboflowProps } from "@/components/Roboflow/Roboflow.types";
 
 const RoboflowContainer = styled.div`
   display: flex;
@@ -55,10 +56,8 @@ const RoboflowLabel = styled.span`
   line-height: 1;
 `
 
-interface RoboflowProps {
-}
 
-const Roboflow = (props: RoboflowProps) => {
+export const Roboflow = (props: RoboflowProps) => {
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [objectDetections, setObjectDetections] = useState<RoboflowObjectDetection[]>([])
@@ -85,7 +84,7 @@ const Roboflow = (props: RoboflowProps) => {
     } else if (isMd || isLg) {
         constraintWidth = 768
         constraintWidth = 432
-    } else if(isXl || isXxl){
+    } else if (isXl || isXxl) {
         constraintWidth = 1024
         constraintWidth = 576
     }
@@ -310,7 +309,9 @@ const Roboflow = (props: RoboflowProps) => {
             <RoboflowContent>
                 <RoboflowToolbar>
                     {videoInputMode && <RoboflowLabel>{videoInputMode.label}</RoboflowLabel>}
-                    {videoInputModeCount > 1 && <RoboflowButton variant={"small"} primary={true} onClick={handleSwitchVideoModeClick}>Switch camera</RoboflowButton>}
+                    {videoInputModeCount > 1 &&
+                        <RoboflowButton variant={"small"} primary={true} onClick={handleSwitchVideoModeClick}>Switch
+                            camera</RoboflowButton>}
                 </RoboflowToolbar>
                 <RoboflowVideoContent>
                     <RoboflowWebcam
@@ -327,5 +328,3 @@ const Roboflow = (props: RoboflowProps) => {
         </RoboflowContainer>
     )
 }
-
-export default Roboflow

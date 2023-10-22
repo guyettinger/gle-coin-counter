@@ -21,7 +21,7 @@ const NavContainer = styled.div`
 `
 
 const NavImage = styled(Image)`
-    margin: -14px 0
+  margin: -14px 0
 `
 
 const NavLogo = styled.div`
@@ -40,12 +40,12 @@ const HelpIcon = styled(MdHelpCenter)`
 `
 
 
-const Navbar = () => {
+export const Navbar = () => {
     const [open, setOpen] = useState(false);
     return (
         <NavContainer>
             <NavLogo>
-                <NavImage src='/avatar.png' className="profile-img" width={48} height={48} alt="Guy's Avatar" />
+                <NavImage src='/avatar.png' className="profile-img" width={48} height={48} alt="Guy's Avatar"/>
                 <Link href="/">
                     Coin Counter
                 </Link>
@@ -56,11 +56,10 @@ const Navbar = () => {
                 </PopoverTrigger>
                 <HelpPopoverContent>
                     <PopoverHeading>Directions</PopoverHeading>
-                    <PopoverDescription>Point your webcam at a set of coins to get a monetary total.</PopoverDescription>
+                    <PopoverDescription>Point your webcam at a set of coins to get a monetary
+                        total.</PopoverDescription>
                 </HelpPopoverContent>
             </Popover>
         </NavContainer>
     )
 }
-
-export default Navbar;

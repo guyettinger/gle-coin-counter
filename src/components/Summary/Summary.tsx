@@ -1,6 +1,7 @@
 "use client"
 import styled from "styled-components";
-import { RoboflowObjectDetection } from "@/types/roboflow.types";
+import { RoboflowObjectDetection } from "@/services/roboflow/roboflowService.types";
+import { SummaryProps } from "@/components/Summary/Summary.types";
 
 const SummaryContainer = styled.div`
   display: flex;
@@ -30,10 +31,6 @@ const SummaryParagraph = styled.p`
   font-weight: 400;
   margin-bottom: 1rem;
 `
-
-export interface SummaryProps {
-    detections: RoboflowObjectDetection[]
-}
 
 export const Summary = ({detections}: SummaryProps) => {
     let pennies = 0;
@@ -87,5 +84,3 @@ export const Summary = ({detections}: SummaryProps) => {
         </SummaryContainer>
     )
 }
-
-export default Summary;

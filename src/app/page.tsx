@@ -1,6 +1,6 @@
 "use client"
 import styled from "styled-components";
-import Roboflow from "@/components/Roboflow";
+import { Roboflow } from "@/components/Roboflow/Roboflow";
 
 const HomeContainer = styled.div`
   display: flex;

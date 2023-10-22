@@ -1,0 +1,1 @@
+export {asyncSetInterval} from './asyncService'
