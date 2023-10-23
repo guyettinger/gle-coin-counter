@@ -39,7 +39,6 @@ const HelpIcon = styled(MdHelpCenter)`
   vertical-align: text-top;
 `
 
-
 export const Navbar = () => {
     const [open, setOpen] = useState(false);
     return (
@@ -56,8 +55,9 @@ export const Navbar = () => {
                 </PopoverTrigger>
                 <HelpPopoverContent>
                     <PopoverHeading>Directions</PopoverHeading>
-                    <PopoverDescription>Point your webcam at a set of coins to get a monetary
-                        total.</PopoverDescription>
+                    <PopoverDescription>
+                        Point your webcam at a set of coins to get a monetary total.
+                    </PopoverDescription>
                 </HelpPopoverContent>
             </Popover>
         </NavContainer>
