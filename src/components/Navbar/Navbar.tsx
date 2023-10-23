@@ -1,7 +1,9 @@
 "use client"
-import Link from "next/link";
+import { useState } from "react";
+import { MdHelpCenter } from "react-icons/md";
 import styled from "styled-components";
 import Image from "next/image";
+import Link from "next/link";
 import {
     Popover,
     PopoverContent,
@@ -9,8 +11,6 @@ import {
     PopoverHeading,
     PopoverTrigger
 } from "gle-components";
-import { useState } from "react";
-import { MdHelpCenter } from "react-icons/md";
 
 const NavContainer = styled.div`
   display: flex;
