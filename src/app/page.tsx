@@ -1,11 +1,13 @@
 "use client"
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { waitForRoboflowModule } from "@/services/roboflowModule/roboflowModuleService";
-import { RoboflowAuthParams } from "@/services";
+import {
+    waitForRoboflowModule,
+    RoboflowAuthParams,
+    RoboflowApiProvider,
+    RoboflowClientProvider
+} from "gle-roboflow-components"
 import { CoinCounter } from "@/components/CoinCounter/CoinCounter";
-import { RoboflowApiProvider } from "@/context/RoboflowApi/RoboflowApiContext";
-import { RoboflowClientProvider } from "@/context/RoboflowClient/RoboflowClientContext";
 import { Loading } from "@/components/Loading";
 
 const HomeContainer = styled.div`

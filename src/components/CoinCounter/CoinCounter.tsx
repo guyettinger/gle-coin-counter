@@ -4,11 +4,11 @@ import styled from "styled-components"
 import {
     RoboflowLoadParams,
     RoboflowModel,
-    RoboflowObjectDetection
-} from "@/services/roboflowModule/roboflowModuleService.types";
-import { useRoboflowClientContext } from "@/context/RoboflowClient/RoboflowClientContext";
-import { RoboflowWebcam } from "@/components/RoboflowWebcam";
-import { RoboflowObjectDetectionCanvas } from "@/components/RoboflowObjectDetectionCanvas";
+    RoboflowObjectDetection,
+    useRoboflowClientContext,
+    RoboflowWebcam,
+    RoboflowObjectDetectionCanvas
+} from "gle-roboflow-components";
 import { CoinCounterSummary } from "@/components/CoinCounterSummary/CoinCounterSummary";
 import { CoinCounterProps } from "@/components/CoinCounter/CoinCounter.types";
 
@@ -57,7 +57,7 @@ export const CoinCounter = ({coinCounterDetectionModel, coinCounterDetectionMode
             setObjectDetections(detections)
         } catch (e) {
             const error = e as Error
-            if(!error) return
+            if (!error) return
             console.error(error.message)
         }
     }

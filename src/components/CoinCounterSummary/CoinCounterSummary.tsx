@@ -1,6 +1,6 @@
 "use client"
 import styled from "styled-components";
-import { RoboflowObjectDetection } from "@/services/roboflowModule/roboflowModuleService.types";
+import { RoboflowObjectDetection } from "gle-roboflow-components";
 import { CoinCounterSummaryProps } from "@/components/CoinCounterSummary/CoinCounterSummary.types";
 
 const CoinCounterSummaryContainer = styled.div`
