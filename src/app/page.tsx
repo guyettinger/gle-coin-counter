@@ -23,8 +23,8 @@ const roboflowAuthParams: RoboflowAuthParams = {
 }
 
 // Detection model
-const coinCounterDetectionModel = "coin-detector-jcdoq"
-const coinCounterDetectionModelVersion = "1"
+const coinCounterDetectionModel = "cash-counter"
+const coinCounterDetectionModelVersion = "10"
 
 export default function Home() {
     const [roboflowReady, setRoboflowReady] = useState(false)
