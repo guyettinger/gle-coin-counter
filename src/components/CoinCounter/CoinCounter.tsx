@@ -1,15 +1,15 @@
 import { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
-import styled, { useTheme } from "styled-components";
-import { useMediaQuery } from "styled-breakpoints/use-media-query";
-import { Button } from "gle-components";
+import styled from "styled-components"
+import { Button } from "gle-components";;
+import { useRoboflowClientContext } from "@/context/RoboflowClient/RoboflowClientContext";
+import { useActiveBreakpoints } from "@/hooks";
 import { asyncSetInterval } from "@/services/async/asyncService";
 import {
     RoboflowLoadParams,
     RoboflowModel,
     RoboflowObjectDetection
 } from "@/services/roboflowModule/roboflowModuleService.types";
-import { useRoboflowClientContext } from "@/context/RoboflowClient/RoboflowClientContext";
 import { FACING_MODE_USER, VideoInputMode } from "@/services/mediaDevice/mediaDeviceService.types";
 import { getVideoInputModes } from "@/services/mediaDevice/mediaDeviceService";
 import { CoinCounterProps } from "@/components/CoinCounter/CoinCounter.types";
@@ -71,13 +71,7 @@ export const CoinCounter = ({coinCounterDetectionModel, coinCounterDetectionMode
     const roboflowClient = useRoboflowClientContext()
 
     // determine screen size
-    const theme = useTheme()
-    const isXs = useMediaQuery(theme.breakpoints.only("xs"))
-    const isSm = useMediaQuery(theme.breakpoints.only("sm"))
-    const isMd = useMediaQuery(theme.breakpoints.only("md"))
-    const isLg = useMediaQuery(theme.breakpoints.only("lg"))
-    const isXl = useMediaQuery(theme.breakpoints.only("xl"))
-    const isXxl = useMediaQuery(theme.breakpoints.only("xxl"))
+    const {isXs, isSm, isMd, isLg, isXl, isXxl} = useActiveBreakpoints()
 
     // determine optimal video constraints dimensions
     let constraintWidth = 640
@@ -97,7 +91,7 @@ export const CoinCounter = ({coinCounterDetectionModel, coinCounterDetectionMode
     // video constraints based on current video input mode
     let videoConstraints: MediaTrackConstraints = {
         facingMode: FACING_MODE_USER,
-        width: { max: constraintWidth},
+        width: {max: constraintWidth},
         height: {max: constraintHeight}
     }
 
