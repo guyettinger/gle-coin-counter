@@ -4,14 +4,22 @@ import styled, { useTheme } from "styled-components";
 import { useMediaQuery } from "styled-breakpoints/use-media-query";
 import { Button } from "gle-components";
 import { asyncSetInterval } from "@/services/async/asyncService";
-import { RoboflowModel, RoboflowObjectDetection } from "@/services/roboflow/roboflowService.types";
-import { startInference } from "@/services/roboflow/roboflowService";
+import {
+    RoboflowLoadParams,
+    RoboflowModel,
+    RoboflowObjectDetection
+} from "@/services/roboflowModule/roboflowModuleService.types";
 import { FACING_MODE_USER, VideoInputMode } from "@/services/mediaDevice/mediaDeviceService.types";
 import { getVideoInputModes } from "@/services/mediaDevice/mediaDeviceService";
-import { Summary } from "@/components/Summary/Summary";
-import { RoboflowProps } from "@/components/Roboflow/Roboflow.types";
+import { CoinCounterSummary } from "@/components/CoinCounterSummary/CoinCounterSummary";
+import { CoinCounterProps } from "@/components/CoinCounter/CoinCounter.types";
+import { useRoboflowClientContext } from "@/context/RoboflowClient/RoboflowClientContext";
 
-const RoboflowContainer = styled.div`
+// configuration
+const MODEL_URL = "coin-detector-jcdoq"
+const MODEL_VERSION = "1"
+
+const CoinCounterContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,7 +27,7 @@ const RoboflowContainer = styled.div`
   margin: 1rem 0;
 `
 
-const RoboflowContent = styled.div`
+const CoinCounterContent = styled.div`
   position: relative;
   padding: 1rem;
   margin-bottom: 1rem;
@@ -27,43 +35,44 @@ const RoboflowContent = styled.div`
   border-radius: 4px;
 `
 
-const RoboflowToolbar = styled.div`
+const CoinCounterToolbar = styled.div`
   margin-bottom: 10px;
 `
 
-const RoboflowVideoContent = styled.div`
+const CoinCounterVideoContent = styled.div`
   position: relative;
 `
 
-const RoboflowWebcam = styled(Webcam)`
+const CoinCounterWebcam = styled(Webcam)`
   position: relative;
   top: 0;
   left: 0;
 `
 
-const RoboflowCanvas = styled.canvas`
+const CoinCounterCanvas = styled.canvas`
   position: absolute;
   top: 0;
   left: 0;
 `
 
-const RoboflowButton = styled(Button)`
+const CoinCounterButton = styled(Button)`
   float: right;
 `
 
-const RoboflowLabel = styled.span`
+const CoinCounterLabel = styled.span`
   font-size: 12px;
   line-height: 1;
 `
 
 
-export const Roboflow = (props: RoboflowProps) => {
+export const CoinCounter = ({coinCounterDetectionModel, coinCounterDetectionModelVersion}: CoinCounterProps) => {
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [objectDetections, setObjectDetections] = useState<RoboflowObjectDetection[]>([])
     const [videoInitialized, setVideoInitialized] = useState<boolean>(false)
     const [videoInputModes, setVideoInputModes] = useState<VideoInputMode[]>([])
     const [videoInputMode, setVideoInputMode] = useState<VideoInputMode | null>(null)
+    const roboflowClient = useRoboflowClientContext()
 
     // determine screen size
     const theme = useTheme()
@@ -299,32 +308,40 @@ export const Roboflow = (props: RoboflowProps) => {
             // initialize
             initializeVideo()
         } else {
-            // start inference
-            startInference(detect)
+            // load the model
+            const roboflowLoadParams: RoboflowLoadParams = {
+                model: coinCounterDetectionModel,
+                version: coinCounterDetectionModelVersion
+            }
+            roboflowClient.load(roboflowLoadParams).then(() => {
+                // start inference
+                roboflowClient.startInference(detect)
+            })
+
         }
     }, [videoInitialized])
 
     return (
-        <RoboflowContainer>
-            <RoboflowContent>
-                <RoboflowToolbar>
-                    {videoInputMode && <RoboflowLabel>{videoInputMode.label}</RoboflowLabel>}
+        <CoinCounterContainer>
+            <CoinCounterContent>
+                <CoinCounterToolbar>
+                    {videoInputMode && <CoinCounterLabel>{videoInputMode.label}</CoinCounterLabel>}
                     {videoInputModeCount > 1 &&
-                        <RoboflowButton variant={"small"} primary={true} onClick={handleSwitchVideoModeClick}>Switch
-                            camera</RoboflowButton>}
-                </RoboflowToolbar>
-                <RoboflowVideoContent>
-                    <RoboflowWebcam
+                        <CoinCounterButton variant={"small"} primary={true} onClick={handleSwitchVideoModeClick}>Switch
+                            camera</CoinCounterButton>}
+                </CoinCounterToolbar>
+                <CoinCounterVideoContent>
+                    <CoinCounterWebcam
                         ref={webcamRef}
                         muted={true}
                         videoConstraints={videoConstraints}
                     />
-                    <RoboflowCanvas
+                    <CoinCounterCanvas
                         ref={canvasRef}
                     />
-                </RoboflowVideoContent>
-                {!!objectDetections && <Summary detections={objectDetections}/>}
-            </RoboflowContent>
-        </RoboflowContainer>
+                </CoinCounterVideoContent>
+                {!!objectDetections && <CoinCounterSummary detections={objectDetections}/>}
+            </CoinCounterContent>
+        </CoinCounterContainer>
     )
 }

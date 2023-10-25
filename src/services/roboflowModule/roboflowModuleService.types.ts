@@ -8,9 +8,9 @@ export interface RoboflowLoadParams {
     onMetadata?: (m: RoboflowProject) => void
 }
 
-export interface RoboflowClient {
+export interface RoboflowModule {
     VERSION: string
-    auth: (authParams: RoboflowAuthParams) => RoboflowClient
+    auth: (authParams: RoboflowAuthParams) => RoboflowModule
     load: (loadParams: RoboflowLoadParams) => Promise<RoboflowModel>
     tf: any
 }

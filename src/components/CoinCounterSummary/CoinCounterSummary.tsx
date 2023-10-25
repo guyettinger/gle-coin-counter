@@ -1,16 +1,16 @@
 "use client"
 import styled from "styled-components";
-import { RoboflowObjectDetection } from "@/services/roboflow/roboflowService.types";
-import { SummaryProps } from "@/components/Summary/Summary.types";
+import { RoboflowObjectDetection } from "@/services/roboflowModule/roboflowModuleService.types";
+import { CoinCounterSummaryProps } from "@/components/CoinCounterSummary/CoinCounterSummary.types";
 
-const SummaryContainer = styled.div`
+const CoinCounterSummaryContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `
 
-const SummaryText = styled.div`
+const CoinCounterSummaryText = styled.div`
   text-align: center;
   margin: 1rem 0;
   width: 80%;
@@ -20,19 +20,19 @@ const SummaryText = styled.div`
   }
 `
 
-const SummaryHeader1 = styled.h1`
+const CoinCounterSummaryHeader1 = styled.h1`
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 1rem;
 `
 
-const SummaryParagraph = styled.p`
+const CoinCounterSummaryParagraph = styled.p`
   font-size: 1rem;
   font-weight: 400;
   margin-bottom: 1rem;
 `
 
-export const Summary = ({detections}: SummaryProps) => {
+export const CoinCounterSummary = ({detections}: CoinCounterSummaryProps) => {
     let pennies = 0;
     let nickels = 0;
     let dimes = 0;
@@ -62,25 +62,27 @@ export const Summary = ({detections}: SummaryProps) => {
     }
 
     return (
-        <SummaryContainer>
-            <SummaryText>
-                <SummaryHeader1>Summary</SummaryHeader1>
-                <SummaryParagraph>
+        <CoinCounterSummaryContainer>
+            <CoinCounterSummaryText>
+                <CoinCounterSummaryHeader1>
+                    Summary
+                </CoinCounterSummaryHeader1>
+                <CoinCounterSummaryParagraph>
                     {pennies} Pennies
-                </SummaryParagraph>
-                <SummaryParagraph>
+                </CoinCounterSummaryParagraph>
+                <CoinCounterSummaryParagraph>
                     {nickels} Nickels
-                </SummaryParagraph>
-                <SummaryParagraph>
+                </CoinCounterSummaryParagraph>
+                <CoinCounterSummaryParagraph>
                     {dimes} Dimes
-                </SummaryParagraph>
-                <SummaryParagraph>
+                </CoinCounterSummaryParagraph>
+                <CoinCounterSummaryParagraph>
                     {quarters} Quarters
-                </SummaryParagraph>
-                <SummaryParagraph>
-                    ${total} Total
-                </SummaryParagraph>
-            </SummaryText>
-        </SummaryContainer>
+                </CoinCounterSummaryParagraph>
+                <CoinCounterSummaryParagraph>
+                    ${total.toFixed(2)} Total
+                </CoinCounterSummaryParagraph>
+            </CoinCounterSummaryText>
+        </CoinCounterSummaryContainer>
     )
 }

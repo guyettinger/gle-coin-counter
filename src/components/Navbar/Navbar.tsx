@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { MdHelpCenter } from "react-icons/md";
+import { MdHelp } from "react-icons/md";
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,8 +33,8 @@ const HelpPopoverContent = styled(PopoverContent)`
   color: black;
 `
 
-const HelpIcon = styled(MdHelpCenter)`
-  font-size: 14px;
+const HelpIcon = styled(MdHelp)`
+  font-size: 32px;
   margin-right: 4px;
   vertical-align: text-top;
 `
@@ -50,8 +50,8 @@ export const Navbar = () => {
                 </Link>
             </NavLogo>
             <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger variant={"small"} primary={true} onClick={() => setOpen((v) => !v)}>
-                    <span><HelpIcon/>Help</span>
+                <PopoverTrigger asChild={true} onClick={() => setOpen((v) => !v)}>
+                    <span><HelpIcon/></span>
                 </PopoverTrigger>
                 <HelpPopoverContent>
                     <PopoverHeading>Directions</PopoverHeading>
