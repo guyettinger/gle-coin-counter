@@ -41,6 +41,7 @@ const CoinCounterToolbar = styled.div`
 
 const CoinCounterVideoContent = styled.div`
   position: relative;
+  background: black;
 `
 
 const CoinCounterWebcam = styled(Webcam)`
@@ -88,21 +89,21 @@ export const CoinCounter = ({coinCounterDetectionModel, coinCounterDetectionMode
     let constraintHeight = 480
 
     if (isXs || isSm) {
-        constraintWidth = 512
-        constraintHeight = 288
+        constraintWidth = 320
+        constraintHeight = 240
     } else if (isMd || isLg) {
-        constraintWidth = 768
-        constraintWidth = 432
-    } else if (isXl || isXxl) {
-        constraintWidth = 1024
         constraintWidth = 576
+        constraintHeight = 432
+    } else if (isXl || isXxl) {
+        constraintWidth = 640
+        constraintHeight = 480
     }
 
     // video constraints based on current video input mode
     let videoConstraints: MediaTrackConstraints = {
         facingMode: FACING_MODE_USER,
-        width: constraintWidth,
-        height: constraintHeight
+        width: { max: constraintWidth},
+        height: {max: constraintHeight}
     }
 
     if (videoInputMode) {
@@ -330,10 +331,12 @@ export const CoinCounter = ({coinCounterDetectionModel, coinCounterDetectionMode
                         <CoinCounterButton variant={"small"} primary={true} onClick={handleSwitchVideoModeClick}>Switch
                             camera</CoinCounterButton>}
                 </CoinCounterToolbar>
-                <CoinCounterVideoContent>
+                <CoinCounterVideoContent style={{width:constraintWidth, height:constraintHeight}}>
                     <CoinCounterWebcam
                         ref={webcamRef}
                         muted={true}
+                        width={constraintWidth}
+                        height={constraintHeight}
                         videoConstraints={videoConstraints}
                     />
                     <CoinCounterCanvas

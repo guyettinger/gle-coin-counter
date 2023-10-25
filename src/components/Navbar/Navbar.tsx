@@ -17,6 +17,7 @@ const NavContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1rem 20px 1rem 0;
+  color: #efefef;
   background-color: #1D1E20;
 `
 
@@ -37,6 +38,10 @@ const HelpIcon = styled(MdHelp)`
   font-size: 32px;
   margin-right: 4px;
   vertical-align: text-top;
+  
+  &:hover {
+    color: white;
+  }
 `
 
 export const Navbar = () => {
