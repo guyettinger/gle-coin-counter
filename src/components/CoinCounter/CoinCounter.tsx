@@ -9,15 +9,11 @@ import {
     RoboflowModel,
     RoboflowObjectDetection
 } from "@/services/roboflowModule/roboflowModuleService.types";
+import { useRoboflowClientContext } from "@/context/RoboflowClient/RoboflowClientContext";
 import { FACING_MODE_USER, VideoInputMode } from "@/services/mediaDevice/mediaDeviceService.types";
 import { getVideoInputModes } from "@/services/mediaDevice/mediaDeviceService";
-import { CoinCounterSummary } from "@/components/CoinCounterSummary/CoinCounterSummary";
 import { CoinCounterProps } from "@/components/CoinCounter/CoinCounter.types";
-import { useRoboflowClientContext } from "@/context/RoboflowClient/RoboflowClientContext";
-
-// configuration
-const MODEL_URL = "coin-detector-jcdoq"
-const MODEL_VERSION = "1"
+import { CoinCounterSummary } from "@/components/CoinCounterSummary/CoinCounterSummary";
 
 const CoinCounterContainer = styled.div`
   display: flex;
