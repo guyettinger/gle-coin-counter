@@ -41,7 +41,6 @@ const CoinCounterToolbar = styled.div`
 
 const CoinCounterVideoContent = styled.div`
   position: relative;
-  background: black;
 `
 
 const CoinCounterWebcam = styled(Webcam)`
@@ -331,7 +330,7 @@ export const CoinCounter = ({coinCounterDetectionModel, coinCounterDetectionMode
                         <CoinCounterButton variant={"small"} primary={true} onClick={handleSwitchVideoModeClick}>Switch
                             camera</CoinCounterButton>}
                 </CoinCounterToolbar>
-                <CoinCounterVideoContent style={{width:constraintWidth, height:constraintHeight}}>
+                <CoinCounterVideoContent>
                     <CoinCounterWebcam
                         ref={webcamRef}
                         muted={true}
