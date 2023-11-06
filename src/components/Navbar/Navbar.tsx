@@ -49,7 +49,7 @@ export const Navbar = () => {
     return (
         <NavContainer>
             <NavLogo>
-                <NavImage src='./avatar.png' className="profile-img" width={48} height={48} alt="Guy's Avatar"/>
+                <NavImage src='./images/avatar.png' className="profile-img" width={48} height={48} alt="Guy's Avatar"/>
                 <Link href="/">
                     Coin Counter
                 </Link>
