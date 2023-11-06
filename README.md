@@ -1,11 +1,18 @@
-# gle-coin-counter
+<a href="/">
+    <img alt="logo" src="public/images/logo-flipped.png" align="right" width="120" height="120"/>
+</a>
+
+# GLE Coin Counter
 Coin counting using machine learning.
 
-## Example
+## Demo
+![Screenshot](public/images/screenshot.png?raw=true "Screenshot")
 [Demo](https://guyettinger.github.io/gle-coin-counter/)
 
-## Screenshot
-![Screenshot](public/screenshot.png?raw=true "Screenshot")
+## Installation
+```shell
+npm install gle-coin-counter@latest
+```
 
 ## Development
 Install
